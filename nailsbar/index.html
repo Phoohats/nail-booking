@@ -415,6 +415,23 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
 .opt[aria-pressed="true"] .grow { font-weight: 500; }
 .av { width: 48px; height: 48px; font-size: 17px; }
 .tech { width: 62px; }
+
+/* Owner: today at a glance, one row per tech. */
+.today { background: var(--surface); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.today .k { font-size: 14px; color: var(--soft); }
+.today .v { font-size: 34px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.today .v span { font-size: 16px; font-weight: 400; color: var(--soft); }
+.today .tbar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: var(--sunk); }
+.today .tbar i { display: block; height: 100%; }
+.today .tbar .dn { background: var(--edge); } .today .tbar .nw { background: var(--coral-ink); }
+.today .leg { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--soft); }
+.today .leg b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+.trow { display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.trow .av { width: 40px; height: 40px; font-size: 15px; }
+.trow .nm { font-weight: 500; }
+.trow .ds { font-size: 13px; color: var(--soft); display: block; }
+.trow .cnt { font-size: 13px; color: var(--mute); white-space: nowrap; text-align: right; }
+.trow.busy .av { background: var(--coral-tint); color: var(--coral-ink); border-color: var(--coral-ink); }
 </style>
 
 <div class="wrap">
@@ -969,14 +986,32 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
     if (p.type === 'pct') p.val = Math.min(p.val, LIMIT_PCT); else p.val = Math.min(p.val, LIMIT_BAHT);
     p.title = p.title.replace(/ลด[\s\u00A0].*$/, promoLabel(p));
   }
+  function ownerToday() {
+    const rows = rowsFor(0).slice().sort((a, b) => a.t - b.t);
+    const done = rows.filter(isDone).length, now = rows.filter(inChairNow), up = rows.filter(upcoming);
+    const silent = up.filter((b) => b.st === 'silent');
+    const pct = (n) => rows.length ? n / rows.length * 100 : 0;
+    let h = '<section class="today" aria-label="คิววันนี้"><p class="k">วันนี้ · ตอนนี้ ' + hhmm(NOW_MIN) + '</p><p class="v">' + rows.length + ' คิว <span>ช่าง ' + TECHS.length + ' คน</span></p>' +
+      '<div class="tbar" aria-hidden="true"><i class="dn" style="width:' + pct(done) + '%"></i><i class="nw" style="width:' + pct(now.length) + '%"></i></div>' +
+      '<div class="leg"><span>เสร็จแล้ว <b>' + done + '</b></span><span>กำลังทำ <b>' + now.length + '</b></span><span>รออีก <b>' + up.length + '</b></span></div>';
+    TECHS.forEach((t) => {
+      const mine = rows.filter((b) => b.tech === t.id); const cur = mine.find(inChairNow); const nxt = mine.find(upcoming); const left = mine.filter((b) => !isDone(b)).length;
+      const line = cur ? 'กำลังทำ · ' + cur.who + ' ถึง ' + hhmm(cur.t + cur.len) + (nxt ? ' · ต่อไป ' + hhmm(nxt.t) : '') : nxt ? (nxt.t <= NOW_MIN ? 'รอลูกค้า · ' + nxt.who + ' นัด ' + hhmm(nxt.t) + ' ยังไม่มา (สาย ' + (NOW_MIN - nxt.t) + ' นาที)' : 'ว่างอยู่ · คิวต่อไป ' + hhmm(nxt.t) + ' ' + nxt.who) : 'ว่างถึงปิดร้าน';
+      h += '<div class="trow' + (cur ? ' busy' : '') + '"><span class="av">' + esc((t.name.match(/[ก-ฮ]/) || [t.name[0]])[0]) + '</span><span><span class="nm">ช่าง' + esc(t.name) + '</span><span class="ds">' + esc(line) + '</span></span><span class="cnt">เหลือ ' + left + ' คิว</span></div>';
+    });
+    if (silent.length) h += '<p class="note warn">ยังไม่ตอบยืนยันนัด ' + silent.length + ' คน: ' + silent.map((b) => esc(b.who) + ' ' + hhmm(b.t)).join(', ') + ' · ระบบเตือนซ้ำให้แล้ว</p>';
+    let ahead = 0; for (let i = 1; i <= 7; i++) ahead += rowsFor(i).length;
+    h += '<div class="rowx" style="justify-content:space-between;flex-wrap:wrap"><span class="small">จองล่วงหน้า 7 วัน ' + ahead + ' คิว</span><button class="btn secondary sm" data-role="staff">ดูคิวทั้งหมด</button></div></section>';
+    return h;
+  }
   function renderOwner() {
     const o = S.owner; const waiting = S.promos.filter((p) => p.status === 'wait');
     let h = '<div class="liff"><span class="name" style="text-align:left;padding-left:8px">' + SHOP + ' <span class="small">· เจ้าของ</span></span></div><div class="scroll"><div class="pad">';
     const decide = waiting.map((p) => '<div class="decide"><span class="lb">รอคุณตัดสินใจ · ส่งโดย ' + esc(p.by) + '</span><span class="nm">' + esc(p.title) + '</span><span class="st warn" style="align-self:flex-start">' + (p.uses === 0 ? 'ไม่จำกัดสิทธิ์' : 'ลดเกินเพดาน') + '</span><span class="small">ร้านอาจลดไปสูงสุด</span><span style="font-size:26px;font-weight:600;line-height:1.1">' + (p.uses ? baht(worstPer(p) * p.uses) : baht(worstPer(p) * 10) + '<span class="small"> ต่อสัปดาห์ ถ้าใช้ 10 คิว</span>') + '</span><details class="more" style="border:0"><summary>ดูเงื่อนไข</summary><div><p class="muted">' + esc(ruleSentence(p)) + '</p></div></details>' +
       (o.rejecting === p.id ? '<span class="small">เลือกเหตุผล (พนักงานจะเห็น)</span><div class="choice"><button class="ch" data-act="o-reason" data-id="' + p.id + '" data-v="ลดเยอะไป">ลดเยอะไป</button><button class="ch" data-act="o-reason" data-id="' + p.id + '" data-v="ตอนนี้ยังไม่ต้อง">ตอนนี้ยังไม่ต้อง</button><button class="ch" data-act="o-adjust" data-id="' + p.id + '">' + adjustLabel(p) + '</button><button class="ch" data-act="o-unreject">ยกเลิก</button></div>'
         : '<div class="acts"><button class="btn primary" data-act="o-ok" data-id="' + p.id + '">อนุมัติ</button><button class="btn secondary" data-act="o-no" data-id="' + p.id + '">ไม่อนุมัติ</button></div>') + '</div>').join('');
-    const money = '<div class="hero"><p class="k">รายได้สัปดาห์นี้</p><p class="v">฿46,800</p><p class="d">มากกว่าสัปดาห์ก่อน 9%</p></div>';
-    h += o.home === 'money' ? money + decide : (decide || '<p class="note ok">ไม่มีเรื่องรอตัดสินใจ พนักงานจัดการเองได้ทั้งหมด</p>') + money;
+    const money = '<div class="kv"><span><span class="k">รายได้สัปดาห์นี้</span><span class="s">มากกว่าสัปดาห์ก่อน 9%</span></span><span class="v">฿46,800</span></div>';
+    h += decide + ownerToday() + money;
     h += '<div><p class="sec" style="margin-top:4px">ข้อเสนอของร้าน</p>' +
       '<button class="offer" data-act="o-toggle" data-v="p1" aria-pressed="' + (S.promos[0].status === 'on') + '"><span><span class="nm">ลูกค้าใหม่ ลด 10%</span><span class="ds">ครั้งแรกครั้งเดียว เช็กจาก LINE</span></span><span class="sw"></span></button>' +
       '<button class="offer" data-act="o-toggle" data-v="loyalty" aria-pressed="' + S.loyalty.on + '"><span><span class="nm">บัตรสะสมแต้ม</span><span class="ds">ครบ ' + CARD_NEED + ' ดวง ' + rewardName() + ' · ได้ดวงตอนกดมาถึงแล้ว</span></span><span class="sw"></span></button>' +
@@ -1011,7 +1046,7 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
   const MUST = '<li>ตารางเดียวสำหรับจองออนไลน์ walk-in และปิดเวลา</li><li>กันเวลา 10 นาทีระหว่างโอนมัดจำ และเลือกว่าตรวจสลิปอัตโนมัติหรือคนตรวจ</li><li>รู้ว่าเป็นลูกค้าใหม่หรือเก่าจาก LINE userId</li><li>ข้อความหลังทำเล็บส่งทาง OA ซึ่งนับโควตา 300 ข้อความฟรีต่อเดือน · ห้ามส่งโปรถึงเพื่อนทุกคน ส่งเฉพาะคนถึงรอบ (วันที่ 21) หรือหายไป 45 วัน</li><li>ปุ่มจองบน Google Maps ต้องเป็นหน้าเว็บจองจริง ใส่ลิงก์ LINE ไม่ได้ (นโยบาย Google)</li><li>ข้อความบริการของ LINE MINI App ในไทยต้องผ่านผู้ให้บริการที่ได้รับรอง ถ้าสร้างเองให้ใช้ข้อความตอบกลับแทน</li><li>ดวงในบัตรมาจากการกด “มาถึงแล้ว” เท่านั้น บันทึกว่าพนักงานคนไหนกด</li>';
   function renderRail() {
     const n = NOTES[S.role]; const cur = n.cur();
-    let h = '<section><h2>' + n.title + '</h2><div class="pick">' + n.opts.map(([v, t, d, rec]) => '<button class="pk" data-act="r-opt" data-k="' + n.key + '" data-v="' + v + '" aria-pressed="' + (cur === v) + '"><b>' + t + '</b><span>' + d + '</span>' + (rec ? '<em>แนะนำ</em>' : '') + '</button>').join('') + '</div></section>';
+    let h = S.role === 'owner' ? '' : '<section><h2>' + n.title + '</h2><div class="pick">' + n.opts.map(([v, t, d, rec]) => '<button class="pk" data-act="r-opt" data-k="' + n.key + '" data-v="' + v + '" aria-pressed="' + (cur === v) + '"><b>' + t + '</b><span>' + d + '</span>' + (rec ? '<em>แนะนำ</em>' : '') + '</button>').join('') + '</div></section>';
     if (S.role === 'customer') h += '<section><h2>สมมติว่าลูกค้าคนนี้เป็น</h2><div class="choice">' + Object.keys(WHO).map((k) => '<button class="ch" data-act="r-who" data-v="' + k + '" aria-pressed="' + (S.who === k) + '">' + WHO[k] + '</button>').join('') + '</div><p style="margin-top:8px">ระบบจริงรู้เองจากประวัติการจองใน LINE</p></section>';
     h += '<section><h2>ลองกดตามนี้</h2><ul>' + TRY[S.role].map((x) => '<li>' + x + '</li>').join('') + '</ul></section>';
     h += '<details><summary>ข้อมูลจริงของร้านที่ใช้</summary><ul><li>จาก IG @nailsbar.prachauthid: ชื่อร้าน บริการ (ทาสีเจล ต่อเล็บ สปา พาราฟิน แว็กซ์ ลิฟติ้ง ต่อขนตา) เวลาเปิด 10:00–20:00 LINE OA ที่มีอยู่แล้ว โปรเดือน พ.ย. สปามือ-เท้า ฿990 และขัดส้นเท้า + พาราฟินเท้า ฿890 · รูปปกและรูปผลงานทั้งหมดมาจาก IG ร้าน</li><li>จาก Google Maps: คะแนน 5.0 จาก 105 รีวิว · ร้านแถวนั้นอย่างน้อย 3 ร้านมีปุ่ม “จองออนไลน์” แล้ว ร้านนี้ยังไม่มี</li><li>ราคาอื่น เวลาทำ และชื่อช่างเป็นตัวอย่าง รอเจ้าของร้านแก้</li></ul></details>';
@@ -1045,7 +1080,7 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
       { sel: '#phone details.cal > summary', tx: 'เลื่อนลงแล้วแตะ “ปฏิทินคิว 30 วันข้างหน้า” ดูว่าวันไหนว่าง วันไหนแน่น', done: () => !!document.querySelector('#phone details.cal[open]') },
       { sel: '[data-act="o-toggle"][data-v="p2"]', tx: 'วันธรรมดาว่างเยอะ · แตะสวิตช์ “บ่ายวันธรรมดา ลด 100 บาท” เพื่อเปิดหรือปิดโปร', done: () => { const p = S.promos.find((x) => x.id === 'p2'); return !!p && p.status !== T.p2; } },
       { sel: '[data-act="o-pickrw"]', tx: 'แตะ “เปลี่ยน ›” ดูรางวัลบัตรแต้มกับต้นทุนจริง', done: () => !!S.owner.pickRw }
-    ], end: 'เจ้าของเห็นรายได้ วันว่าง และต้นทุนโปรในหน้าเดียว โปรทุกอย่างคุณเป็นคนเปิด-ปิดเอง พนักงานเปลี่ยนเองไม่ได้ · ตัวเลขในหน้านี้เป็นตัวอย่าง' }
+    ], end: 'เจ้าของเห็นคิววันนี้ ช่างแต่ละคนทำอะไรอยู่ รายได้ วันว่าง และต้นทุนโปรในหน้าเดียว โปรทุกอย่างคุณเป็นคนเปิด-ปิดเอง พนักงานเปลี่ยนเองไม่ได้ · ตัวเลขในหน้านี้เป็นตัวอย่าง' }
   };
   function startMission(k) {
     T.m = k; T.i = 0; T.end = false; S.sheet = null; S.toast = null;
