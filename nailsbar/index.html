@@ -393,8 +393,10 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
 .gcard .gsteps span.on { background: var(--coral-ink); }
 .gcard .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 @media (max-width: 440px) { body.touring .phone { height: calc(100svh - 150px); min-height: 520px; } }
-.hint { outline: 3px solid var(--coral-ink) !important; outline-offset: 2px; animation: hintp 1.6s ease-out infinite; position: relative; z-index: 2; }
-@keyframes hintp { 0% { box-shadow: 0 0 0 0 oklch(0.52 0.15 8 / .45); } 100% { box-shadow: 0 0 0 12px oklch(0.52 0.15 8 / 0); } }
+.coach-hole { position: absolute; z-index: 35; pointer-events: none; box-shadow: 0 0 0 9999px oklch(0.2 0.02 8 / .5); outline: 3px solid oklch(0.86 0.08 8); outline-offset: 0; animation: coachp 1.4s ease-in-out infinite; }
+@keyframes coachp { 50% { outline-offset: 5px; outline-color: oklch(1 0 0); } }
+.coach-tip { position: absolute; z-index: 36; left: 12px; right: 12px; pointer-events: none; background: var(--bg); color: var(--ink); border-radius: 14px; padding: 10px 14px; font-size: 15px; line-height: 1.45; box-shadow: 0 4px 8px oklch(0.2 0.02 8 / .25); }
+.coach-tip b { color: var(--coral-ink); font-weight: 600; margin-right: 4px; }
 
 /* Round 9: slimmer. Small controls are soft-filled with no outline; the picked one is solid. Lists are rows, not boxes. */
 .ch, .tab-h { border: 0; background: var(--sunk); color: var(--ink); }
@@ -1114,7 +1116,24 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
     if (!el) return; el.classList.add('hint');
     const sc = el.closest('.scroll, .sh-bd'); if (sc) { const er = el.getBoundingClientRect(), sr = sc.getBoundingClientRect(); if (er.top < sr.top || er.bottom > sr.bottom) sc.scrollTop += er.top - sr.top - sr.height / 3; }
     const pr = el.getBoundingClientRect(), gb = $('#guide').getBoundingClientRect().bottom; if (pr.bottom > innerHeight - 12) window.scrollBy(0, pr.bottom - innerHeight + 24); else if (pr.top < gb + 8) window.scrollBy(0, pr.top - gb - 16);
+    placeCoach(); setTimeout(placeCoach, 320); setTimeout(placeCoach, 800);
   }
+  function placeCoach() {
+    const ph = $('#phone'); if (!ph) return; let hole = ph.querySelector('.coach-hole'), tip = ph.querySelector('.coach-tip');
+    const el = T.m && !T.end ? ph.querySelector('.hint') : null;
+    if (!el) { if (hole) hole.remove(); if (tip) tip.remove(); return; }
+    if (!hole) { hole = document.createElement('div'); hole.className = 'coach-hole'; hole.setAttribute('aria-hidden', 'true'); ph.appendChild(hole); }
+    if (!tip) { tip = document.createElement('div'); tip.className = 'coach-tip'; tip.setAttribute('role', 'status'); ph.appendChild(tip); }
+    const pr = ph.getBoundingClientRect(), er = el.getBoundingClientRect(); const x = er.left - pr.left - ph.clientLeft - 4, y = er.top - pr.top - ph.clientTop - 4;
+    const rad = Math.min(18, (parseFloat(getComputedStyle(el).borderTopLeftRadius) || 8) + 4);
+    hole.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + (er.width + 8) + 'px;height:' + (er.height + 8) + 'px;border-radius:' + rad + 'px';
+    const st = MISSIONS[T.m].steps; tip.innerHTML = '<b>ขั้น ' + (T.i + 1) + '/' + st.length + '</b>' + esc(st[T.i].tx);
+    const h = tip.offsetHeight, below = y + er.height + 8 + 10; tip.style.top = (below + h < ph.clientHeight - 6 ? below : Math.max(6, y - 10 - h)) + 'px';
+  }
+  document.addEventListener('scroll', () => { if (T.m && !T.end) placeCoach(); }, true);
+  window.addEventListener('resize', () => { if (T.m && !T.end) placeCoach(); });
+  document.addEventListener('animationend', (e) => { if (T.m && !T.end && !e.target.classList.contains('coach-hole')) placeCoach(); }, true);
+  document.addEventListener('transitionend', () => { if (T.m && !T.end) placeCoach(); }, true);
   document.addEventListener('toggle', () => refreshGuide(), true);
   function render(keepScroll) {
     document.querySelectorAll('.seg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.role === S.role)));
@@ -1243,6 +1262,7 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
   fromHash(); window.addEventListener('hashchange', () => { fromHash(); render(); });
   window.__proto = { S, TODAY, EXTRA, rowsFor, render };
   render();
+  try { if (!localStorage.getItem('tour1')) { localStorage.setItem('tour1', '1'); setTimeout(() => startMission('customer'), 400); } } catch (_) {}
 })();
 </script>
 
