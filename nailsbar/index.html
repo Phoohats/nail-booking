@@ -434,6 +434,89 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
 .trow .ds { font-size: 13px; color: var(--soft); display: block; }
 .trow .cnt { font-size: 13px; color: var(--mute); white-space: nowrap; text-align: right; }
 .trow.busy .av { background: var(--coral-tint); color: var(--coral-ink); border-color: var(--coral-ink); }
+
+/* Owner promo manager. On a computer it opens as a back-office window: list on the left, editor and a live customer preview on the right. */
+.stage[hidden], .desk[hidden] { display: none !important; }
+body.desk-on .wrap { max-width: 1280px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.pm-hhd { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 4px; }
+.desk { background: var(--bg); border-radius: 18px; border: 1px solid var(--line); box-shadow: 0 6px 8px oklch(0.2 0.02 32 / 0.08); overflow: hidden; overflow: clip; }
+.desk-bar { display: flex; align-items: center; gap: 12px; padding: 8px 12px 8px 16px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.desk-bar .dots { display: flex; gap: 6px; }
+.desk-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.desk-bar .url { flex: 1; min-width: 0; font-size: 14px; color: var(--soft); background: var(--bg); border-radius: 999px; padding: 6px 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desk-bar .ib { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 999px; color: var(--soft); }
+.desk-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); min-height: 660px; }
+.pm-list { padding: 24px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 12px; }
+.pm-edit { padding: 24px 28px; display: flex; flex-direction: column; gap: 24px; }
+@media (min-width: 1180px) { .pm-edit { display: grid; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; gap: 32px; } }
+.pm-empty { display: grid; place-items: center; color: var(--soft); text-align: center; }
+.pm-hd { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pm-hd h2, .pm-h { font-size: 22px; font-weight: 600; line-height: 1.3; }
+.pm-form { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.pm-side { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.pm-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; align-items: center; border-bottom: 1px solid var(--line); }
+.pm-row .main { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: center; text-align: left; padding: 10px 8px; margin-left: -8px; border-radius: 12px; min-height: 76px; min-width: 0; }
+.pm-row.pm-ph { grid-template-columns: minmax(0, 1fr) auto; }
+.pm-row.pm-ph .main { grid-template-columns: 52px minmax(0, 1fr) auto; }
+.pm-row.pm-ph .pm-del, .pm-row.pm-ph .pm-gap { display: none; }
+.pm-row .chev { color: var(--mute); }
+.pm-row.pm-ph .nm { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.pm-edit .pm-pics { flex-wrap: wrap; overflow: visible; }
+.pm-edit .pm-foot { position: sticky; bottom: 0; z-index: 2; background: var(--bg); padding: 12px 0 16px; border-top: 1px solid var(--line); }
+.pm-row .main:hover { background: var(--surface); }
+.pm-row[aria-current="true"] .main { background: var(--coral-tint); }
+.pm-row .tx { min-width: 0; display: flex; flex-direction: column; }
+.pm-row .nm { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pm-row .ds { font-size: 13px; color: var(--mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pm-row .meta { font-size: 13px; color: var(--soft); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pm-th { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; background: var(--coral-tint); color: var(--coral-ink); display: grid; place-items: center; }
+.pm-row.pm-ph .pm-th { width: 52px; height: 52px; }
+.pm-row.off .pm-th, .pm-row.off .nm { opacity: .5; }
+.pm-sw { min-height: 44px; min-width: 60px; display: grid; place-items: center; }
+.pm-sw[aria-pressed="true"] .sw { background: var(--coral-ink); }
+.pm-sw[aria-pressed="true"] .sw::after { transform: translateX(20px); }
+.pm-del, .pm-gap { width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; color: var(--mute); }
+.pm-del:hover { color: var(--bad); background: var(--bad-tint); }
+.pm-field { display: flex; flex-direction: column; gap: 10px; }
+.pm-field > .lb { font-size: 15px; font-weight: 500; }
+.pm-in { font: inherit; font-size: 16px; padding: 12px 14px; border: 0; background: var(--sunk); border-radius: 12px; min-height: 48px; width: 100%; color: var(--ink); }
+.pm-in:focus { outline: 2px solid var(--coral-ink); outline-offset: 1px; background: var(--bg); }
+.pm-in::placeholder { color: var(--soft); }
+.pm-step { display: flex; align-items: center; gap: 8px; }
+.pm-step button { width: 48px; height: 48px; border-radius: 999px; background: var(--sunk); font-size: 22px; line-height: 1; flex: none; }
+.pm-step .pm-in { width: 130px; text-align: center; font-size: 22px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.pm-step .unit { color: var(--soft); min-width: 32px; }
+.pm-err { color: var(--bad); font-size: 14px; }
+.pm-err:empty, #pm-cost:empty, .pm-warn:empty { display: none; }
+.pm-warn { font-size: 14px; color: var(--warn); background: var(--warn-tint); border-radius: 10px; padding: 8px 12px; }
+.pm-drop { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; aspect-ratio: 1.51 / 1; max-height: 230px; width: 100%; border: 2px dashed var(--edge); border-radius: 16px; background: var(--surface); color: var(--soft); cursor: pointer; text-align: center; padding: 12px; }
+.pm-drop b { color: var(--ink); font-weight: 500; }
+.pm-drop:hover, .pm-drop.over { border-color: var(--coral-ink); background: var(--coral-tint); color: var(--coral-ink); }
+.pm-drop:focus-within, .pm-imgacts label:focus-within { outline: 2px solid var(--coral-ink); outline-offset: 2px; }
+.pm-imgbox img { width: 100%; aspect-ratio: 1.51 / 1; max-height: 230px; object-fit: cover; border-radius: 16px; display: block; }
+.pm-imgbox.over img { outline: 3px solid var(--coral-ink); }
+.pm-imgacts { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.pm-imgacts label { position: relative; }
+.pm-pics { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px; }
+.pm-pic { flex: none; width: 60px; height: 60px; border-radius: 12px; overflow: hidden; }
+.pm-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pm-pic[aria-pressed="true"] { outline: 3px solid var(--coral-ink); outline-offset: 2px; }
+.pm-foot { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.pm-foot { flex-wrap: nowrap; justify-content: space-between; }
+.pm-foot .btn.primary { white-space: nowrap; }
+.link.danger { color: var(--bad); }
+.pm-card { padding: 0; display: flex; flex-direction: column; }
+.pm-card .pm-img { display: block; width: 100%; aspect-ratio: 1.51 / 1; object-fit: cover; }
+.pm-card.slim .pm-img { aspect-ratio: auto; height: 128px; }
+.pm-card .pm-tx { padding: 12px 14px 10px; display: flex; flex-direction: column; gap: 2px; }
+.pm-card .ds { font-size: 13.5px; color: var(--soft); }
+.pm-mini { width: 300px; border: 8px solid oklch(0.22 0.02 32); border-radius: 32px; overflow: hidden; background: var(--bg); }
+.pm-mini .pad { padding: 14px; gap: 10px; }
+.pm-prev { display: flex; flex-direction: column; gap: 8px; }
+.pm-toast { position: fixed; left: 50%; top: 20px; transform: translateX(-50%); z-index: 40; background: var(--cta); color: var(--cta-ink); border-radius: 14px; padding: 8px 10px 8px 16px; display: flex; gap: 8px; align-items: center; font-size: 15px; width: max-content; max-width: calc(100vw - 32px); animation: up .2s ease-out; }
+.pm-toast.in-phone { position: absolute; left: 12px; right: 12px; top: auto; bottom: 96px; transform: none; width: auto; }
+.pm-toast button { color: var(--coral); font-weight: 600; min-height: 44px; padding: 0 8px; white-space: nowrap; }
 </style>
 
 <div class="wrap">
@@ -453,6 +536,7 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
     <div class="phone" id="phone"></div>
     <aside class="rail" id="rail"></aside>
   </main>
+  <section class="desk" id="desk" aria-label="หลังร้าน: จัดการโปร" hidden></section>
 </div>
 
 <script>
@@ -526,6 +610,9 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
   function resetCust(step) { const v = S.cust ? S.cust.variant : 'A'; S.cust = { variant: v, step: step || 'services', cat: 'all', main: null, rm: 'none', art: 'noart', coupon: null, useRw: false, tech: 'any', day: 1, time: null, reply: null, prev: null, total: 0 }; }
   function resetBuilder() { S.staff.b = { step: 1, tpl: null, type: null, val: null, scope: 'all', until: null, uses: null }; }
   resetCust('services'); S.cust.fromMaps = true; resetBuilder();
+  const PM_KEY = 'pm1:' + SHOP;
+  try { const sv = JSON.parse(localStorage.getItem(PM_KEY) || 'null'); if (sv && Array.isArray(sv.promos) && sv.promos.some((p) => p.id === 'rw')) { S.promos = sv.promos; S.monthly = !!sv.monthly; S.pmDirty = true; } } catch (_) {}
+  function pmSave() { if (!S.pmDirty) return; try { localStorage.setItem(PM_KEY, JSON.stringify({ promos: S.promos, monthly: S.monthly })); } catch (_) {} }
 
   // ---------- helpers ----------
   const $ = (s) => document.querySelector(s);
@@ -546,7 +633,7 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
     cal: '<rect x="4" y="5.5" width="16" height="14.5" rx="3"/><path d="M8 3.5v4M16 3.5v4M4 10h16"/>', tag: '<path d="M3.5 12.5V5a1.5 1.5 0 0 1 1.5-1.5h7.5l8 8-9 9z"/><circle cx="8" cy="8" r="1.4"/>',
     pin: '<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>', user: '<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>',
     spark: '<path d="M12 3.5l1.8 5 5 1.8-5 1.8-1.8 5-1.8-5-5-1.8 5-1.8z"/>', heart: '<path d="M12 19.5s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 7.6a3.9 3.9 0 0 1 7 2.3c0 5.2-7 9.6-7 9.6z"/>',
-    list: '<path d="M9 7h11M9 12h11M9 17h11M4.5 7h.01M4.5 12h.01M4.5 17h.01"/>', block: '<circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/>', map: '<path d="M9 4.5L3.5 6.5v13l5.5-2 6 2 5.5-2v-13l-5.5 2z"/><path d="M9 4.5v13M15 6.5v13"/>', leaf: '<path d="M5 19c0-8 5-13 14-14 0 9-5 14-14 14z"/><path d="M5 19l7-7"/>', drop: '<path d="M12 3.5s6 6.4 6 10.5a6 6 0 0 1-12 0c0-4.1 6-10.5 6-10.5z"/>', eye: '<path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/>'
+    list: '<path d="M9 7h11M9 12h11M9 17h11M4.5 7h.01M4.5 12h.01M4.5 17h.01"/>', block: '<circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/>', map: '<path d="M9 4.5L3.5 6.5v13l5.5-2 6 2 5.5-2v-13l-5.5 2z"/><path d="M9 4.5v13M15 6.5v13"/>', leaf: '<path d="M5 19c0-8 5-13 14-14 0 9-5 14-14 14z"/><path d="M5 19l7-7"/>', drop: '<path d="M12 3.5s6 6.4 6 10.5a6 6 0 0 1-12 0c0-4.1 6-10.5 6-10.5z"/>', trash: '<path d="M4.5 7h15M10 7V5h4v2M6.5 7l1 12.5h9l1-12.5M10 11v5M14 11v5"/>', image: '<rect x="3.5" y="5" width="17" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M20.5 16l-5-5-8 8"/>', eye: '<path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/>'
   };
   const icon = (n, size) => '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"' + (size ? ' style="width:' + size + 'px;height:' + size + 'px"' : '') + '>' + ICONS[n] + '</svg>';
 
@@ -584,11 +671,12 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
     return out;
   }
   const quietPromo = (id) => S.promos.find((p) => p.rule === 'quiet' && eligible(p, id));
-  const promoLabel = (p) => p.type === 'pct' ? 'ลด ' + p.val + '%' : 'ลด ' + p.val + ' บาท';
+  const promoLabel = (p) => p.special != null ? 'ราคาพิเศษ ' + baht(p.special) : p.type === 'pct' ? 'ลด ' + p.val + '%' : 'ลด ' + p.val + ' บาท';
   const scopeText = (p) => p.scope === 'all' ? 'ทุกบริการ' : p.scope.map((id) => svc(id).name).join(', ');
   function ruleSentence(p) {
     if (p.rule === 'new') return 'ลูกค้าที่ไม่เคยจองกับร้าน ได้' + promoLabel(p) + ' กับ' + scopeText(p) + ' ครั้งแรกครั้งเดียว ถึง ' + p.until;
     if (p.rule === 'lapsed') return 'ลูกค้าที่หายไปเกิน 45 วัน ได้' + promoLabel(p) + ' กับ' + scopeText(p) + ' 1 ครั้งต่อคน ถึง ' + p.until;
+    if (p.rule === 'all') return 'ทุกคนได้' + promoLabel(p) + ' กับ' + scopeText(p) + ' ถึง ' + p.until;
     return 'ทุกคนที่' + QUIET_TXT + ' ได้' + promoLabel(p) + ' กับ' + scopeText(p) + ' ทุกครั้งที่จองในช่วงนี้ ถึง ' + p.until;
   }
   function worstPer(p) { return Math.max.apply(null, SERVICES.filter((s) => inScope(p, s.id)).map((s) => discountOf(p, s.price + ADDON_MAX))); }
@@ -628,6 +716,7 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
   function custServices() {
     const c = S.cust; let h = liff('จองคิว', null) + '<div class="scroll"><div class="pad">';
     h += '<div class="cover photo"><img src="' + PHOTOS.cover + '" alt="บรรยากาศในร้าน Nails Bar ประชาอุทิศ 90"><h2 class="wordmark">NAILS <span>Bar</span></h2></div><div class="shop stack" style="gap:4px"><p class="muted">ร้านทำเล็บ สปามือ-เท้า ประชาอุทิศ 90 · ทุ่งครุ</p><div class="meta"><span class="star">' + icon('star', 16) + '5.0</span><span>105 รีวิวบน Google</span><span>10:00–20:00</span></div>' + (c.fromMaps ? '<p class="small">' + icon('map', 14) + ' เปิดจากปุ่ม “จอง” บน Google Maps</p>' : '') + '</div>';
+    { const mp = S.promos.find((p) => madeShown(p) && p.img); if (mp) h += madeCard(mp, 'slim'); }
     h += '<div class="stack"><p class="sec">เลือกบริการ</p><div class="tabs-h" role="group" aria-label="หมวด">' + CATS.map(([k, n]) => '<button class="tab-h" data-act="c-cat" data-v="' + k + '" aria-pressed="' + (c.cat === k) + '">' + n + '</button>').join('') + '</div></div><div class="stack">';
     SERVICES.filter((s) => c.cat === 'all' || s.cat === c.cat).forEach((s) => {
       const p = onMonthly(s.id) ? null : S.promos.filter((x) => eligible(x, s.id) && !x.hidden).sort((a, b) => discountOf(b, s.price) - discountOf(a, s.price))[0];
@@ -641,8 +730,9 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
   function custPromos() {
     let h = liff(SHOP, 'chat') + '<div class="scroll"><div class="pad"><h1 class="title">โปรเดือนนี้</h1><p class="muted">เห็นเฉพาะโปรที่ใช้ได้จริงกับคุณ (' + WHO[S.who] + ') ระบบเช็กจากประวัติการจองใน LINE</p><div class="stack">';
     let n = 0;
+    S.promos.filter(madeShown).forEach((p) => { n++; h += madeCard(p); });
     if (S.monthly) SERVICES.filter((s) => s.promo).forEach((s) => { n++; h += '<button class="coupon" data-act="c-pick" data-p="" data-s="' + s.id + '"><div class="top-c">' + (PHOTOS[s.id] ? '<img class="thumb" src="' + PHOTOS[s.id] + '" alt="">' : '') + '<span><span class="who">โปรเดือน พ.ย. (จาก IG ร้าน)</span><br><span class="nm">' + esc(s.name) + '</span><br><span class="pr">' + baht(s.promo) + (s.price > s.promo ? '<s>' + baht(s.price) + '</s>' : '') + '</span></span></div><div class="bt"><span>ทุกคน · ถึง 30 พ.ย. · ลดซ้อนไม่ได้</span><b>จองด้วยโปรนี้</b></div></button>'; });
-    S.promos.filter((p) => p.status === 'on' && !p.hidden && whoOk(p)).forEach((p) => SERVICES.filter((s) => inScope(p, s.id) && !onMonthly(s.id)).forEach((s) => {
+    S.promos.filter((p) => p.status === 'on' && !p.hidden && whoOk(p) && !p.made).forEach((p) => SERVICES.filter((s) => inScope(p, s.id) && !onMonthly(s.id)).forEach((s) => {
       n++; h += '<button class="coupon" data-act="c-pick" data-p="' + p.id + '" data-s="' + s.id + '"><div class="top-c">' + (PHOTOS[s.id] ? '<img class="thumb" src="' + PHOTOS[s.id] + '" alt="">' : '<span class="ph thumb" style="background:var(--surface);color:var(--coral)">' + icon('tag', 24) + '</span>') + '<span><span class="who">' + esc(p.title) + '</span><br><span class="nm">' + esc(s.name) + '</span><br><span class="pr">' + baht(s.price - discountOf(p, s.price)) + '<s>' + baht(s.price) + '</s></span></span></div><div class="bt"><span>' + (p.rule === 'quiet' ? QUIET_TXT : p.rule === 'new' ? 'ครั้งแรกเท่านั้น' : '1 ครั้งต่อคน') + ' · ถึง ' + esc(p.until) + '</span><b>จองด้วยโปรนี้</b></div></button>';
     }));
     if (!n) h += '<p class="note">ตอนนี้ยังไม่มีโปรสำหรับคุณ ดูบริการทั้งหมดได้เลย</p>';
@@ -1006,6 +1096,195 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
     h += '<div class="rowx" style="justify-content:space-between;flex-wrap:wrap"><span class="small">จองล่วงหน้า 7 วัน ' + ahead + ' คิว</span><button class="btn secondary sm" data-role="staff">ดูคิวทั้งหมด</button></div></section>';
     return h;
   }
+  // ---------- owner promo manager ----------
+  const PM_WHO = [['all', 'ทุกคน'], ['new', 'ลูกค้าใหม่'], ['lapsed', 'ลูกค้าที่หายไป'], ['quiet', 'บ่ายวันธรรมดา']];
+  const PM_WHO_TIP = { all: 'ทุกคนที่จองในช่วงโปร', new: 'ไม่เคยจองกับร้าน ระบบเช็กจากประวัติ LINE ครั้งแรกครั้งเดียว', lapsed: 'เคยมาแต่หายไปเกิน 45 วัน 1 ครั้งต่อคน', quiet: 'เฉพาะคิวที่' + QUIET_TXT };
+  const PM_PRE = { all: '', new: 'ลูกค้าใหม่ ', lapsed: 'คิดถึงกัน ', quiet: 'บ่ายวันธรรมดา ' };
+  const oneSvc = (sc) => sc !== 'all' && sc.length === 1 ? svc(sc[0]) : null;
+  const isoDay = (x) => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+  const pmWide = () => innerWidth >= 900 && !!S.owner.pm && !S.owner.pm.phone;
+  const imgSrc = (p) => !p.img ? '' : (PHOTOS[p.img] || p.img);
+  const madeShown = (p) => p.made && p.status === 'on' && !p.hidden && whoOk(p) && (p.scope === 'all' || p.scope.some((id) => !onMonthly(id)));
+  function scopeShort(p) { if (p.scope === 'all') return 'ทุกบริการ'; const n = p.scope.map((id) => svc(id).name); return n.slice(0, 2).join(', ') + (n.length > 2 ? ' และอีก ' + (n.length - 2) + ' บริการ' : ''); }
+  function whoLine(p) { return { all: 'ทุกคน', new: 'ลูกค้าใหม่ ครั้งแรก', lapsed: 'ลูกค้าที่หายไปเกิน 45 วัน', quiet: QUIET_TXT }[p.rule] || ''; }
+  function genTitle(d) {
+    const one = oneSvc(d.scope); const n = Number(d.val) || 0;
+    const lb = d.type === 'special' ? (one ? one.name + ' ' : '') + 'ราคาพิเศษ ' + baht(n) : promoLabel({ type: d.type, val: n }) + (one ? ' ' + one.name : '');
+    return (PM_PRE[d.rule] || '') + lb + (d.rule === 'all' && d.scope === 'all' && d.type !== 'special' ? ' ทุกบริการ' : '');
+  }
+  function pmUntil(d) {
+    if (d.untilKey === 'keep') return d.untilTxt;
+    if (d.untilKey === 'year') return '31 ธ.ค.';
+    if (d.untilKey === 'date') { if (!d.date) return ''; const x = new Date(d.date + 'T00:00'); return x.getDate() + ' ' + TH_M[x.getMonth()]; }
+    const e = new Date(today.getFullYear(), today.getMonth() + 1, 0); return e.getDate() + ' ' + TH_M[e.getMonth()];
+  }
+  function blankDraft() { return { id: null, title: '', img: null, type: 'pct', val: 10, scope: 'all', rule: 'all', untilKey: 'month', date: '', untilTxt: '', uses: 0 }; }
+  function draftFrom(p) {
+    const d = { id: p.id, title: '', img: p.img || null, type: p.special != null ? 'special' : p.type, val: p.special != null ? p.special : p.val, scope: p.scope === 'all' ? 'all' : p.scope.slice(), rule: p.rule, untilKey: p.untilKey || 'keep', date: p.date || '', untilTxt: p.until, uses: p.uses || 0 };
+    if (p.title !== genTitle(d)) d.title = p.title;
+    return d;
+  }
+  function pmErr(d) {
+    const n = Number(d.val); const one = oneSvc(d.scope);
+    if (d.scope !== 'all' && !d.scope.length) return 'เลือกบริการอย่างน้อย 1 อย่าง';
+    if (!(n > 0)) return d.type === 'special' ? 'ใส่ราคาพิเศษ' : 'ใส่ตัวเลขส่วนลด';
+    if (d.type === 'pct' && n > 90) return 'ลดได้ไม่เกิน 90%';
+    if (d.type === 'special') { if (!one) return 'ราคาพิเศษใช้กับบริการเดียว เลือก 1 บริการ'; if (n >= one.price) return 'ราคาพิเศษต้องต่ำกว่าราคาปกติ ' + baht(one.price); }
+    if (d.type === 'baht') { const lo = Math.min.apply(null, SERVICES.filter((s) => d.scope === 'all' || d.scope.includes(s.id)).map((s) => s.price)); if (n >= lo) return 'ลดเท่าราคาบริการแล้ว (บริการที่ถูกสุด ' + baht(lo) + ')'; }
+    if (d.untilKey === 'date' && (!d.date || new Date(d.date + 'T00:00') < today)) return 'เลือกวันหมดโปร (วันนี้หรือหลังจากนี้)';
+    return '';
+  }
+  function toPromo(d) {
+    const n = Number(d.val) || 0; const one = oneSvc(d.scope); const sp = d.type === 'special';
+    return { title: (d.title || '').trim() || genTitle(d), img: d.img, type: sp ? 'baht' : d.type, val: sp ? Math.max(0, (one ? one.price : 0) - n) : n, special: sp ? n : undefined,
+      scope: d.scope === 'all' ? 'all' : d.scope.slice(), rule: d.rule, until: pmUntil(d) || '—', untilKey: d.untilKey, date: d.date, uses: d.uses };
+  }
+  function madeCard(p, mode) {
+    const one = p.scope !== 'all' && p.scope.length === 1 ? svc(p.scope[0]) : null; const src = imgSrc(p);
+    const tag = mode === 'preview' || (mode === 'slim' && !one) ? 'div' : 'button';
+    const act = tag === 'div' ? '' : one ? ' data-act="c-pick" data-p="' + p.id + '" data-s="' + one.id + '"' : ' data-act="c-start"';
+    const price = one ? '<span class="pr">' + baht(one.price - discountOf(p, one.price)) + '<s>' + baht(one.price) + '</s></span>' : '<span class="ds">' + esc((p.title.includes(promoLabel(p)) ? '' : promoLabel(p) + ' · ') + scopeShort(p)) + '</span>';
+    return '<' + tag + ' class="coupon pm-card' + (mode === 'slim' ? ' slim' : '') + '"' + act + '>' + (src ? '<img class="pm-img" src="' + src + '" alt="' + esc(p.title) + '">' : '') +
+      '<span class="pm-tx"><span class="who">' + esc(whoLine(p)) + '</span><span class="nm">' + esc(p.title) + '</span>' + price + '</span>' +
+      '<span class="bt"><span>ถึง ' + esc(p.until) + (p.uses ? ' · ' + p.uses + ' สิทธิ์แรก' : '') + '</span>' + (tag === 'div' && mode === 'slim' ? '<span>เลือกบริการด้านล่าง ระบบลดให้เอง</span>' : '<b>' + (one ? 'จองด้วยโปรนี้' : 'เลือกบริการ') + '</b>') + '</span></' + tag + '>';
+  }
+  const pmList = () => S.promos.filter((p) => !p.hidden && p.status !== 'wait' && !p.reason);
+  function pmHomeRows() {
+    const ds = (p) => ({ new: 'ครั้งแรกครั้งเดียว เช็กจาก LINE', quiet: QUIET_TXT + ' เติมคิวช่วงว่าง', lapsed: 'ลูกค้าที่หายไปเกิน 45 วัน', all: 'ทุกคน · ' + scopeShort(p) }[p.rule] || '') + ' · ถึง ' + p.until;
+    return pmList().map((p) => '<button class="offer" data-act="o-toggle" data-v="' + p.id + '" aria-pressed="' + (p.status === 'on') + '"><span><span class="nm">' + esc(p.title) + '</span><span class="ds">' + esc(ds(p)) + '</span></span><span class="sw"></span></button>').join('');
+  }
+  function pmRows(wide) {
+    const pm = S.owner.pm; const cur = pm.d && pm.d.id; let h = '';
+    pmList().forEach((p) => {
+      const src = imgSrc(p); const meta = 'ถึง ' + p.until + (p.used ? ' · ใช้ไป ' + p.used + (p.uses ? ' จาก ' + p.uses + ' สิทธิ์' : ' ครั้ง') : '');
+      h += '<div class="pm-row' + (wide ? '' : ' pm-ph') + (p.status === 'on' ? '' : ' off') + '"' + (cur === p.id ? ' aria-current="true"' : '') + '><button class="main" data-act="pm-edit" data-v="' + p.id + '" aria-label="แก้โปร ' + esc(p.title) + '">' +
+        (src ? '<img class="pm-th" src="' + src + '" alt="">' : '<span class="pm-th">' + icon('tag', 22) + '</span>') +
+        '<span class="tx"><span class="nm">' + esc(p.title) + '</span><span class="ds">' + esc((p.status === 'on' ? '' : 'ปิดอยู่ ลูกค้าไม่เห็น · ') + whoLine(p) + ' · ' + scopeShort(p)) + '</span>' + '<span class="ds">' + esc(meta) + '</span>' + '</span>' + (wide ? '' : '<span class="chev" aria-hidden="true">›</span>') + '</button>' +
+        '<button class="pm-sw" data-act="pm-toggle" data-v="' + p.id + '" aria-pressed="' + (p.status === 'on') + '" aria-label="เปิดใช้โปร ' + esc(p.title) + '"><span class="sw"></span></button>' +
+        '<button class="pm-del" data-act="pm-del" data-v="' + p.id + '" aria-label="ลบโปร ' + esc(p.title) + '">' + icon('trash', 20) + '</button></div>';
+    });
+    const mo = SERVICES.filter((x) => x.promo);
+    if (mo.length) h += '<div class="pm-row' + (wide ? '' : ' pm-ph') + (S.monthly ? '' : ' off') + '"><span class="main" style="cursor:default">' + (PHOTOS[mo[0].id] ? '<img class="pm-th" src="' + PHOTOS[mo[0].id] + '" alt="">' : '<span class="pm-th">' + icon('tag', 22) + '</span>') +
+      '<span class="tx"><span class="nm">ราคาโปรประจำเดือน</span><span class="ds">' + esc((S.monthly ? '' : 'ปิดอยู่ ลูกค้าไม่เห็น · ') + mo.map((x) => x.name + ' ' + baht(x.promo)).join(' · ')) + '</span><span class="ds">ตั้งราคาจากหน้าบริการ เปิด-ปิดได้ ลบไม่ได้</span></span></span>' +
+      '<button class="pm-sw" data-act="pm-toggle" data-v="monthly" aria-pressed="' + S.monthly + '" aria-label="เปิดใช้ราคาโปรประจำเดือน"><span class="sw"></span></button><span class="pm-gap"></span></div>';
+    if (!pmList().length) h = '<p class="note">ยังไม่มีโปร กด “สร้างโปรใหม่” ได้เลย</p>' + h;
+    return h;
+  }
+  const chip = (act, v, n, on, dis) => '<button class="ch" data-act="' + act + '" data-v="' + v + '" aria-pressed="' + !!on + '"' + (dis ? ' disabled' : '') + '>' + esc(n) + '</button>';
+  function pmForm(d, wide, err) {
+    const src = d.img ? (PHOTOS[d.img] || d.img) : ''; const one = oneSvc(d.scope); const p = toPromo(d);
+    const file = '<input type="file" class="vh" id="pm-file" accept="image/*" aria-label="เลือกรูปโปรจากเครื่อง">';
+    let h = '<div class="pm-field"><span class="lb">รูปโปร <span class="small">ไม่ใส่ก็ได้</span></span>' +
+      (src ? '<div class="pm-imgbox"><img src="' + src + '" alt="รูปโปรที่เลือก"><div class="pm-imgacts"><label class="btn secondary sm">เปลี่ยนรูป' + file + '</label><button class="btn secondary sm" data-act="pm-noimg">เอารูปออก</button></div></div>'
+        : '<label class="pm-drop">' + icon('image', 30) + '<b>' + (wide ? 'ลากรูปมาวางตรงนี้ หรือคลิกเลือกรูป' : 'แตะเพื่อเลือกรูปจากมือถือ') + '</b><span class="small">ใช้รูปโปสเตอร์เดียวกับที่ลง IG ได้เลย</span>' + file + '</label>') +
+      '<span class="small">หรือใช้รูปของร้าน</span><div class="pm-pics" role="group" aria-label="รูปของร้าน">' + Object.keys(PHOTOS).map((k) => '<button class="pm-pic" data-act="pm-photo" data-v="' + k + '" aria-pressed="' + (d.img === k) + '" aria-label="ใช้รูป' + esc(k === 'cover' ? 'บรรยากาศร้าน' : (svc(k) || { name: k }).name) + '"><img src="' + PHOTOS[k] + '" alt=""></button>').join('') + '</div></div>';
+    h += '<div class="pm-field"><label class="lb" for="pm-title">ชื่อโปร</label><input class="pm-in" id="pm-title" maxlength="40" autocomplete="off" value="' + esc(d.title) + '" placeholder="' + esc('เช่น ' + genTitle(d)) + '"><span class="small">ไม่พิมพ์ก็ได้ ระบบตั้งชื่อตามส่วนลดให้</span></div>';
+    h += '<div class="pm-field"><span class="lb">ลดแบบไหน</span><div class="choice">' + [['pct', 'ลดเป็น %'], ['baht', 'ลดเป็นบาท'], ['special', 'ราคาพิเศษ']].map(([k, n]) => chip('pm-type', k, n, d.type === k)).join('') + '</div>' +
+      '<div class="pm-step"><button data-act="pm-minus" aria-label="ลดลง">−</button><input class="pm-in" id="pm-val" inputmode="numeric" autocomplete="off" value="' + esc(d.val) + '" aria-label="' + (d.type === 'pct' ? 'ลดกี่เปอร์เซ็นต์' : d.type === 'baht' ? 'ลดกี่บาท' : 'ราคาพิเศษกี่บาท') + '"><span class="unit">' + (d.type === 'pct' ? '%' : 'บาท') + '</span><button data-act="pm-plus" aria-label="เพิ่มขึ้น">+</button></div>' +
+      (d.type === 'special' && one ? '<span class="small">ราคาปกติ ' + esc(one.name) + ' ' + baht(one.price) + '</span>' : '') +
+      '<p class="pm-err" id="pm-err" role="alert">' + esc(err) + '</p><p class="pm-warn" id="pm-warn">' + (err ? '' : esc(pmWarn(p))) + '</p><p class="small" id="pm-cost">' + (err ? '' : esc(costLine(p))) + '</p></div>';
+    const mono = SERVICES.filter((x) => onMonthly(x.id) && (d.scope === 'all' || d.scope.includes(x.id)));
+    h += '<div class="pm-field"><span class="lb">ใช้กับบริการ' + (d.type === 'special' ? ' <span class="small">ราคาพิเศษเลือกได้ 1 บริการ</span>' : '') + '</span><div class="choice">' + (d.type === 'special' ? '' : chip('pm-scope', 'all', 'ทุกบริการ', d.scope === 'all')) +
+      SERVICES.map((x) => chip('pm-scope', x.id, x.name, d.scope !== 'all' && d.scope.includes(x.id))).join('') + '</div>' +
+      (mono.length ? '<span class="small">' + esc(mono.map((x) => x.name).join(', ')) + ' ใช้ราคาโปรประจำเดือนอยู่ จะไม่ลดซ้ำ</span>' : '') + '</div>';
+    h += '<div class="pm-field"><span class="lb">ใครได้โปรนี้</span><div class="choice">' + PM_WHO.map(([k, n]) => chip('pm-rule', k, n, d.rule === k)).join('') + '</div><span class="small">' + esc(PM_WHO_TIP[d.rule]) + '</span></div>';
+    h += '<div class="pm-field"><span class="lb">ถึงวันไหน</span><div class="choice">' + (d.untilTxt ? chip('pm-until', 'keep', 'เดิม ' + d.untilTxt, d.untilKey === 'keep') : '') + [['month', 'สิ้นเดือนนี้'], ['year', 'สิ้นปีนี้'], ['date', 'เลือกวัน']].map(([k, n]) => chip('pm-until', k, n, d.untilKey === k)).join('') + '</div>' +
+      (d.untilKey === 'date' ? '<input class="pm-in" type="date" id="pm-date" min="' + isoDay(today) + '" value="' + esc(d.date) + '" aria-label="วันหมดโปร" style="max-width:240px">' : '<span class="small">หมดโปรวันที่ ' + esc(pmUntil(d)) + '</span>') + '</div>';
+    h += '<div class="pm-field"><span class="lb">จำกัดจำนวนไหม</span><div class="choice">' + [[0, 'ไม่จำกัด'], [20, '20 สิทธิ์แรก'], [50, '50 สิทธิ์แรก'], [100, '100 สิทธิ์แรก']].map(([k, n]) => chip('pm-uses', k, n, d.uses === k)).join('') + '</div></div>';
+    return h;
+  }
+  function pmWarn(p) { const r = Math.max.apply(null, SERVICES.filter((x) => inScope(p, x.id)).map((x) => discountOf(p, x.price) / x.price)); return r > 0.5 ? 'ลดเกินครึ่งราคา (สูงสุด ' + Math.round(r * 100) + '%) ตั้งใจใช่ไหม ลองเช็กตัวเลขอีกครั้ง' : ''; }
+  const pmSum = (p) => '<b>' + esc(promoLabel(p)) + '</b><span>' + esc(scopeShort(p)) + '</span>';
+  function pmEditor(wide) {
+    const d = S.owner.pm.d; const isNew = !d.id; const err = pmErr(d); const p = toPromo(d);
+    const btn = '<button class="btn primary" id="pm-go" data-act="pm-save"' + (err ? ' disabled' : '') + '>' + (isNew ? 'ขึ้นโปรในแอป' : 'บันทึก ลูกค้าเห็นทันที') + '</button>';
+    const prev = '<div class="pm-prev"><p class="small">ลูกค้าเห็นแบบนี้ใน LINE</p><div id="pm-prev">' + madeCard(p, 'preview') + '</div></div>';
+    if (wide) return '<section class="pm-edit"><div class="pm-form"><h2 class="pm-h">' + (isNew ? 'สร้างโปรใหม่' : 'แก้โปร') + '</h2>' + pmForm(d, true, err) +
+      '<div class="pm-foot">' + btn + (isNew ? '' : '<button class="link danger" data-act="pm-del" data-v="' + d.id + '">ลบโปรนี้</button>') + '</div></div>' +
+      '<div class="pm-side"><div class="pm-mini"><div class="liff"><span class="ib"></span><span class="name">โปรเดือนนี้</span><span class="ib"></span></div><div class="pad">' + prev + '</div></div><button class="link" data-act="pm-seecust">เปิดดูหน้าลูกค้า</button></div></section>';
+    return '<div class="liff"><button class="ib" data-act="pm-back" aria-label="กลับไปรายการโปร">' + icon('back') + '</button><span class="name">' + (isNew ? 'สร้างโปรใหม่' : 'แก้โปร') + '</span><span class="ib"></span></div>' +
+      '<div class="scroll"><div class="pad">' + pmForm(d, false, err) + prev + (isNew ? '' : '<button class="link danger" data-act="pm-del" data-v="' + d.id + '">ลบโปรนี้</button>') + '</div></div>' +
+      '<div class="footer"><div class="sum" id="pm-sum">' + pmSum(p) + '</div>' + btn + '</div>';
+  }
+  function pmView(wide) {
+    const pm = S.owner.pm; const t = S.pmToast;
+    const toast = t ? '<div class="pm-toast' + (wide ? '' : ' in-phone') + '" role="status"><span>' + esc(t.msg) + '</span>' + (t.undo ? '<button data-act="pm-undo">เลิกทำ</button>' : '') + (t.see ? '<button data-act="pm-seecust">ดูหน้าลูกค้า</button>' : '') + '</div>' : '';
+    const foot = '<p class="small">ลูกค้าได้ส่วนลดดีที่สุดโปรเดียวต่อคิว ระบบเลือกให้เอง</p><p class="small">เดโม: โปรที่ลองสร้างเก็บไว้ในเครื่องนี้ ระบบจริงขึ้นให้ลูกค้าทุกคน · <button class="link" data-act="pm-reset">' + (S.pmResetAsk ? 'แตะอีกครั้งเพื่อล้าง' : 'ล้างโปรที่ลองสร้าง') + '</button></p>';
+    if (wide) return '<div class="desk-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="url">' + esc(SHOP) + ' · หลังร้าน · จัดการโปร</span><button class="btn secondary sm" data-act="pm-mode">ดูแบบมือถือ</button><button class="ib" data-act="pm-close" aria-label="ปิด กลับหน้าเจ้าของ">' + icon('close') + '</button></div>' +
+      '<div class="desk-body"><section class="pm-list"><div class="pm-hd"><h2>โปรของร้าน</h2><button class="btn secondary sm" data-act="pm-new">' + icon('plus', 18) + 'สร้างโปรใหม่</button></div><div>' + pmRows(true) + '</div>' + foot + '</section>' +
+      (pm.d ? pmEditor(true) : '<section class="pm-edit pm-empty"><p>เลือกโปรทางซ้ายเพื่อแก้ หรือกด “สร้างโปรใหม่”</p></section>') + '</div>' + toast;
+    if (pm.d) return pmEditor(false) + toast;
+    return '<div class="liff"><button class="ib" data-act="pm-close" aria-label="กลับหน้าเจ้าของ">' + icon('back') + '</button><span class="name">โปรของร้าน</span>' + (innerWidth >= 900 ? '<button class="link" data-act="pm-mode" style="padding:0 8px">ดูแบบคอม</button>' : '<span class="ib"></span>') + '</div>' +
+      '<div class="scroll"><div class="pad"><button class="btn primary block" data-act="pm-new">' + icon('plus', 18) + 'สร้างโปรใหม่</button><div>' + pmRows(false) + '</div>' + foot + '</div></div>' + toast;
+  }
+  let pmTimer = null;
+  function pmToast(msg, undo, see) { S.pmToast = { msg, undo, see }; clearTimeout(pmTimer); pmTimer = setTimeout(() => { S.pmToast = null; render(true); }, 5000); }
+  function pmLive() {
+    const d = S.owner.pm && S.owner.pm.d; if (!d) return; const err = pmErr(d); const p = toPromo(d);
+    const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+    set('pm-prev', madeCard(p, 'preview')); set('pm-err', esc(err)); set('pm-cost', err ? '' : esc(costLine(p))); set('pm-warn', err ? '' : esc(pmWarn(p))); set('pm-sum', pmSum(p));
+    const b = document.getElementById('pm-go'); if (b) b.disabled = !!err; const ti = document.getElementById('pm-title'); if (ti) ti.placeholder = 'เช่น ' + genTitle(d);
+  }
+  function pmLoad(f) {
+    if (!f || !/^image\//.test(f.type)) { pmToast('ไฟล์นี้ไม่ใช่รูป ลองไฟล์ .jpg หรือ .png'); render(true); return; }
+    const url = URL.createObjectURL(f); const im = new Image();
+    im.onload = () => { const k = Math.min(1, 1000 / Math.max(im.width, im.height)); const c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(url); if (S.owner.pm && S.owner.pm.d) { S.owner.pm.d.img = c.toDataURL('image/jpeg', 0.82); render(true); } };
+    im.onerror = () => { URL.revokeObjectURL(url); pmToast('เปิดรูปนี้ไม่ได้ ลองรูปอื่น'); render(true); };
+    im.src = url;
+  }
+  function pmAct(a, v) {
+    const pm = S.owner.pm; const d = pm && pm.d;
+    if (a === 'pm-open') { S.owner.pm = { d: innerWidth >= 900 ? blankDraft() : null, phone: false }; setTimeout(() => { const k = $('#desk'); if (k && !k.hidden) window.scrollTo({ top: k.getBoundingClientRect().top + scrollY - 12 }); }, 0); return; }
+    if (!pm) return;
+    if (a === 'pm-close') { S.owner.pm = null; S.pmToast = null; return; }
+    if (a === 'pm-mode') { pm.phone = !pm.phone; return; }
+    if (a === 'pm-new') { pm.d = blankDraft(); return; }
+    if (a === 'pm-edit') { const p = S.promos.find((x) => x.id === v); if (p) pm.d = draftFrom(p); return; }
+    if (a === 'pm-back') { pm.d = null; return; }
+    if (a === 'pm-seecust') { S.pmToast = null; S.role = 'customer'; S.sheet = null; resetCust('promos'); try { history.replaceState(null, '', '#customer'); } catch (_) {} setTimeout(() => window.scrollTo({ top: 0 }), 0); return; }
+    if (a === 'pm-toggle') { S.pmDirty = true; if (v === 'monthly') S.monthly = !S.monthly; else { const p = S.promos.find((x) => x.id === v); if (p) p.status = p.status === 'on' ? 'off' : 'on'; } return; }
+    if (a === 'pm-del') { const i = S.promos.findIndex((x) => x.id === v); if (i < 0) return; const p = S.promos.splice(i, 1)[0]; S.pmDirty = true; if (d && d.id === v) pm.d = pmWide() ? blankDraft() : null; pmToast('ลบ “' + p.title + '” แล้ว', { p, i }); return; }
+    if (a === 'pm-undo') { const u = S.pmToast && S.pmToast.undo; if (u) { S.promos.splice(Math.min(u.i, S.promos.length), 0, u.p); S.pmDirty = true; } S.pmToast = null; return; }
+    if (a === 'pm-reset') { if (!S.pmResetAsk) { S.pmResetAsk = true; return; } try { localStorage.removeItem(PM_KEY); } catch (_) {} location.reload(); return; }
+    if (!d) return;
+    if (a === 'pm-type' && d.type !== v) {
+      d.type = v;
+      if (v === 'pct') d.val = 10; else if (v === 'baht') d.val = 100;
+      else { const one = oneSvc(d.scope) || svc(d.scope === 'all' ? 'gel' : d.scope[0]); d.scope = [one.id]; d.val = Math.round(one.price * 0.8 / 10) * 10; }
+    }
+    if (a === 'pm-scope') {
+      if (v === 'all') d.scope = 'all';
+      else if (d.type === 'special') { const x = svc(v); if (d.scope === 'all' || d.scope[0] !== v) d.val = Math.round(x.price * 0.8 / 10) * 10; d.scope = [v]; }
+      else { const sc = d.scope === 'all' ? [] : d.scope.slice(); const i = sc.indexOf(v); if (i >= 0) sc.splice(i, 1); else sc.push(v); d.scope = sc.length ? sc : 'all'; }
+    }
+    if (a === 'pm-rule') d.rule = v;
+    if (a === 'pm-until') { d.untilKey = v; if (v === 'date' && !d.date) d.date = isoDay(dayAt(14)); }
+    if (a === 'pm-uses') d.uses = Number(v);
+    if (a === 'pm-photo') d.img = v;
+    if (a === 'pm-noimg') d.img = null;
+    if (a === 'pm-minus' || a === 'pm-plus') { const stp = d.type === 'pct' ? 5 : d.type === 'baht' ? 50 : 10; let n = (Number(d.val) || 0) + (a === 'pm-plus' ? stp : -stp); n = Math.max(0, n); if (d.type === 'pct') n = Math.min(90, n); d.val = n; }
+    if (a === 'pm-save') {
+      if (pmErr(d)) return; const np = toPromo(d); S.pmDirty = true; let p;
+      if (!d.id) { p = Object.assign({ id: 'm' + Date.now().toString(36), used: 0, status: 'on', by: 'เจ้าของ', made: true }, np); S.promos.unshift(p); pmToast('ขึ้นโปร “' + p.title + '” ในแอปแล้ว', null, true); }
+      else { p = S.promos.find((x) => x.id === d.id); if (!p) return; Object.assign(p, np, { made: true }); if (np.special == null) delete p.special; pmToast('บันทึกแล้ว ลูกค้าเห็นของใหม่ทันที', null, true); }
+      pm.d = pmWide() ? draftFrom(p) : null;
+    }
+  }
+  document.addEventListener('input', (e) => {
+    const t = e.target; const d = S.owner.pm && S.owner.pm.d; if (!d || !t || !t.id) return;
+    if (t.id === 'pm-title') d.title = t.value;
+    else if (t.id === 'pm-val') { const c = t.value.replace(/[^0-9]/g, ''); if (c !== t.value) t.value = c; d.val = c; }
+    else if (t.id === 'pm-date') d.date = t.value; else return;
+    pmLive();
+  });
+  document.addEventListener('change', (e) => { const t = e.target; if (t && t.id === 'pm-file' && t.files && t.files[0]) pmLoad(t.files[0]); });
+  document.addEventListener('dragover', (e) => {
+    if (!S.owner.pm || !S.owner.pm.d) return; e.preventDefault(); const z = e.target.closest && e.target.closest('.pm-drop, .pm-imgbox');
+    document.querySelectorAll('.pm-drop.over, .pm-imgbox.over').forEach((x) => { if (x !== z) x.classList.remove('over'); }); if (z) z.classList.add('over');
+  });
+  document.addEventListener('drop', (e) => { if (!S.owner.pm || !S.owner.pm.d) return; e.preventDefault(); const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) pmLoad(f); });
+  let pmWasWide = innerWidth >= 900;
+  window.addEventListener('resize', () => { const w = innerWidth >= 900; if (w !== pmWasWide) { pmWasWide = w; if (S.role === 'owner' && S.owner.pm) render(true); } });
   function renderOwner() {
     const o = S.owner; const waiting = S.promos.filter((p) => p.status === 'wait');
     let h = '<div class="liff"><span class="name" style="text-align:left;padding-left:8px">' + SHOP + ' <span class="small">· เจ้าของ</span></span></div><div class="scroll"><div class="pad">';
@@ -1014,12 +1293,12 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
         : '<div class="acts"><button class="btn primary" data-act="o-ok" data-id="' + p.id + '">อนุมัติ</button><button class="btn secondary" data-act="o-no" data-id="' + p.id + '">ไม่อนุมัติ</button></div>') + '</div>').join('');
     const money = '<div class="kv"><span><span class="k">รายได้สัปดาห์นี้</span><span class="s">มากกว่าสัปดาห์ก่อน 9%</span></span><span class="v">฿46,800</span></div>';
     h += decide + ownerToday() + money;
-    h += '<div><p class="sec" style="margin-top:4px">ข้อเสนอของร้าน</p>' +
-      '<button class="offer" data-act="o-toggle" data-v="p1" aria-pressed="' + (S.promos[0].status === 'on') + '"><span><span class="nm">ลูกค้าใหม่ ลด 10%</span><span class="ds">ครั้งแรกครั้งเดียว เช็กจาก LINE</span></span><span class="sw"></span></button>' +
+    h += '<div><div class="pm-hhd"><p class="sec">ข้อเสนอของร้าน</p><button class="btn secondary sm" data-act="pm-open">' + icon('plus', 18) + 'จัดการโปร</button></div>' +
+      pmHomeRows() +
       '<button class="offer" data-act="o-toggle" data-v="loyalty" aria-pressed="' + S.loyalty.on + '"><span><span class="nm">บัตรสะสมแต้ม</span><span class="ds">ครบ ' + CARD_NEED + ' ดวง ' + rewardName() + ' · ได้ดวงตอนกดมาถึงแล้ว</span></span><span class="sw"></span></button>' +
       (S.loyalty.on ? '<button class="offer" data-act="o-pickrw" aria-expanded="' + !!o.pickRw + '" style="padding-left:14px"><span><span class="nm">รางวัล: ' + rewardName() + '</span><span class="ds">มูลค่า ฿300 ≈ ' + rewardCostPct(S.loyalty.reward) + '% ถ้าลูกค้าจ่าย ฿700 ทุกครั้ง · สูงสุดราว ' + rewardCostMax(S.loyalty.reward) + '% ถ้าจ่ายครั้งละ ฿500</span></span><span class="link">เปลี่ยน ›</span></button>' +
         (o.pickRw ? '<div class="stack" style="padding:10px 0 4px 14px">' + Object.keys(REWARDS).map((k) => '<button class="opt" data-act="o-reward" data-v="' + k + '" aria-pressed="' + (S.loyalty.reward === k) + '"><span class="radio"></span><span class="grow">' + REWARDS[k].label + '<small>' + REWARDS[k].when + ' · ต้นทุนราว ' + rewardCostPct(k) + '–' + rewardCostMax(k) + '% ของยอด 6 ครั้ง' + (k === 'art' ? ' (จริงคือวัสดุ + เวลาช่าง 30 นาที)' : '') + '</small></span></button>').join('') + '</div>' : '') : '') +
-      '<button class="offer" data-act="o-toggle" data-v="p2" aria-pressed="' + (S.promos.find((x) => x.id === 'p2').status === 'on') + '"><span><span class="nm">บ่ายวันธรรมดา ลด 100 บาท</span><span class="ds">' + QUIET_TXT + ' เติมคิวช่วงว่าง</span></span><span class="sw"></span></button>' +
+
       '<button class="offer" data-act="o-toggle" data-v="monthly" aria-pressed="' + S.monthly + '"><span><span class="nm">โปรเดือน พ.ย. (จาก IG ร้าน)</span><span class="ds">สปามือ-เท้า ฿990 · ขัดส้น+พาราฟินเท้า ฿890 · ลดซ้อนโปรอื่นไม่ได้ · ราคาปกติยังไม่ได้ใส่ ปิดโปรแล้วใช้ราคาเดิมไว้ก่อน</span></span><span class="sw"></span></button></div>';
     h += '<div><div class="kv"><span><span class="k">คิวที่ทำเสร็จ</span><span class="s">สัปดาห์นี้ · ช่าง 3 คน</span></span><span class="v">52</span></div>' +
       '<div class="kv"><span><span class="k">นัดแล้วไม่มา</span><span class="s">เสียโอกาสราว ฿2,900 · เก็บมัดจำได้ ฿500</span></span><span class="v">2 คน</span></div>' +
@@ -1081,14 +1360,15 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
     owner: { n: 3, title: 'ลองเป็นเจ้าของร้าน', sub: 'ดูวันว่าง แล้วเปิดโปร', steps: [
       { sel: '#phone details.cal > summary', tx: 'เลื่อนลงแล้วแตะ “ปฏิทินคิว 30 วันข้างหน้า” ดูว่าวันไหนว่าง วันไหนแน่น', done: () => !!document.querySelector('#phone details.cal[open]') },
       { sel: '[data-act="o-toggle"][data-v="p2"]', tx: 'วันธรรมดาว่างเยอะ · แตะสวิตช์ “บ่ายวันธรรมดา ลด 100 บาท” เพื่อเปิดหรือปิดโปร', done: () => { const p = S.promos.find((x) => x.id === 'p2'); return !!p && p.status !== T.p2; } },
-      { sel: '[data-act="o-pickrw"]', tx: 'แตะ “เปลี่ยน ›” ดูรางวัลบัตรแต้มกับต้นทุนจริง', done: () => !!S.owner.pickRw }
-    ], end: 'เจ้าของเห็นคิววันนี้ ช่างแต่ละคนทำอะไรอยู่ รายได้ วันว่าง และต้นทุนโปรในหน้าเดียว โปรทุกอย่างคุณเป็นคนเปิด-ปิดเอง พนักงานเปลี่ยนเองไม่ได้ · ตัวเลขในหน้านี้เป็นตัวอย่าง' }
+      { sel: '[data-act="o-pickrw"]', tx: 'แตะ “เปลี่ยน ›” ดูรางวัลบัตรแต้มกับต้นทุนจริง', done: () => !!S.owner.pickRw },
+      { sel: '[data-act="pm-open"]', tx: 'แตะ “จัดการโปร” สร้างโปรใหม่ ใส่รูป แก้ หรือลบโปรได้เอง', done: () => !!S.owner.pm }
+    ], end: 'เจ้าของเห็นคิววันนี้ ช่างแต่ละคนทำอะไรอยู่ รายได้ วันว่าง และต้นทุนโปรในหน้าเดียว โปรทุกอย่างคุณสร้าง แก้ และเปิด-ปิดเองได้ ทั้งในมือถือและในคอม พนักงานเปลี่ยนเองไม่ได้ · ตัวเลขในหน้านี้เป็นตัวอย่าง' }
   };
   function startMission(k) {
     T.m = k; T.i = 0; T.end = false; S.sheet = null; S.toast = null;
     if (k === 'customer') { S.role = 'customer'; resetCust('services'); }
     if (k === 'staff') { S.role = 'staff'; Object.assign(S.staff, { tab: 'today', day: 0, month: false, open: null }); }
-    if (k === 'owner') { S.role = 'owner'; S.owner.pickRw = false; T.p2 = S.promos.find((x) => x.id === 'p2').status; }
+    if (k === 'owner') { S.role = 'owner'; S.owner.pickRw = false; S.owner.pm = null; T.p2 = (S.promos.find((x) => x.id === 'p2') || {}).status; }
     render();
     const g = $('#guide'); if (g) window.scrollTo({ top: g.getBoundingClientRect().top + window.scrollY - 8 });
   }
@@ -1138,7 +1418,8 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
   function render(keepScroll) {
     document.querySelectorAll('.seg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.role === S.role)));
     const phone = $('#phone'); const sc = phone.querySelector('.scroll'); const top = sc ? sc.scrollTop : 0;
-    let h = S.role === 'customer' ? renderCustomer() : S.role === 'staff' ? (S.staff.tab === 'today' ? staffToday() : S.staff.tab === 'promo' ? (S.staff.builder === 'none' ? staffOffers() : staffPromos()) : staffBlock()) : renderOwner();
+    const deskOn = S.role === 'owner' && pmWide(); const ae = document.activeElement; const fk = S.owner.pm && ae && ae !== document.body ? (ae.id ? '#' + ae.id : ae.dataset && ae.dataset.act ? '[data-act="' + ae.dataset.act + '"]' + (ae.dataset.v != null ? '[data-v="' + ae.dataset.v + '"]' : '') : null) : null;
+    let h = S.role === 'customer' ? renderCustomer() : S.role === 'staff' ? (S.staff.tab === 'today' ? staffToday() : S.staff.tab === 'promo' ? (S.staff.builder === 'none' ? staffOffers() : staffPromos()) : staffBlock()) : (S.owner.pm && !deskOn ? pmView(false) : renderOwner());
     if (S.role === 'staff') h += '<nav class="navb" aria-label="เมนูพนักงาน">' + [['today', 'list', 'คิว'], ['promo', 'tag', 'ข้อเสนอ'], ['block', 'block', 'ปิดเวลา']].map(([k, i, n]) => '<button data-act="s-tab" data-v="' + k + '" ' + (S.staff.tab === k ? 'aria-current="page"' : '') + '>' + icon(i, 22) + n + '</button>').join('') + '</nav>';
     const fresh = S.sheet && S.sheet !== lastSheet; lastSheet = S.sheet;
     if (S.sheet) h += '<div class="scrim' + (fresh ? ' enter' : '') + '" data-act="sheet-close"></div><div class="sheet' + (fresh ? ' enter' : '') + '" role="dialog" aria-modal="true"><div class="grab"></div><div class="sh-hd">' + ({ options: sheetOptions, cancel: sheetCancel, walkin: sheetWalkin }[S.sheet])();
@@ -1149,18 +1430,20 @@ details.more > div { padding-bottom: 14px; display: flex; flex-direction: column
     const sc2 = phone.querySelector('.scroll'); if (sc2 && keepScroll) sc2.scrollTop = top;
     phone.querySelectorAll('.dates').forEach((d) => { const b = d.querySelector('[aria-pressed="true"]'); if (!b) return; const br = b.getBoundingClientRect(), dr = d.getBoundingClientRect(); if (br.right > dr.right || br.left < dr.left) d.scrollLeft += br.left - dr.left - 20; });
     $('#rail').innerHTML = renderRail();
+    const desk = $('#desk'); document.body.classList.toggle('desk-on', deskOn); desk.hidden = !deskOn; $('.stage').hidden = deskOn; desk.innerHTML = deskOn ? pmView(true) : '';
+    if (fk) { const f = document.querySelector((deskOn ? '#desk ' : '#phone ') + fk); if (f && f !== document.activeElement) f.focus({ preventScroll: true }); }
     refreshGuide();
   }
   let toastTimer = null;
   function toast(msg, undo) { S.toast = { msg, undo }; clearTimeout(toastTimer); toastTimer = setTimeout(() => { S.toast = null; render(true); }, 4000); }
   function saveTicket() { const c = S.cust; if (c.step === 'done' && c.reply !== 'cancel') S.ticket = JSON.parse(JSON.stringify(c)); }
-  function go(fn, keep) { S.toast = null; fn(); render(keep); }
+  function go(fn, keep) { S.toast = null; fn(); pmSave(); render(keep); }
 
   document.addEventListener('input', (e) => { const id = e.target && e.target.id; if ((id === 'w-phone' || id === 'w-name') && S.staff.walk) { S.staff.walk[id === 'w-phone' ? 'phone' : 'name'] = e.target.value; } });
   document.addEventListener('change', (e) => { const id = e.target && e.target.id; if ((id === 'w-phone' || id === 'w-name') && S.staff.walk) render(true); });
   document.addEventListener('click', (e) => {
     const r = e.target.closest('[data-role]'); if (r) { go(() => { S.role = r.dataset.role; S.sheet = null; try { history.replaceState(null, '', '#' + S.role); } catch (_) {} }); return; }
-    const el = e.target.closest('[data-act]'); if (!el) return; const a = el.dataset.act; const c = S.cust; const st = S.staff; const v = el.dataset.v;
+    const el = e.target.closest('[data-act]'); if (!el) return; if (el.dataset.act.startsWith('pm-')) { const pa = el.dataset.act, pv = el.dataset.v; if (pa !== 'pm-reset') S.pmResetAsk = false; go(() => pmAct(pa, pv), !['pm-open', 'pm-new', 'pm-edit', 'pm-back', 'pm-close', 'pm-seecust'].includes(pa)); return; } const a = el.dataset.act; const c = S.cust; const st = S.staff; const v = el.dataset.v;
     const keep = true;
     switch (a) {
       case 'noop': break;
